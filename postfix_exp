@@ -1,0 +1,166 @@
+#include<stdio.h>
+#include<windows.h>
+#include<string.h>
+int len;
+char arr[200];
+char post[200];
+void makePostfix();
+int evalPostfix();
+int isEmpty();
+void push(char i);
+char pop();
+void push2(int i);
+int pop2();
+int doOp(int q, int r, char s);
+
+struct sta {
+	char op;
+	struct sta *next;
+};
+
+struct sta2 {
+	int num;
+	struct sta2 *next;
+};
+
+struct sta *head;
+struct sta2 *head2;
+
+int main () {
+
+	int i;
+
+	for (i = 1; i < 11; i++) {
+		int ret = 0;
+		len = 0;
+		scanf("%d\n", &len);
+		scanf("%s\n", arr);
+	//	printf("%s\n", arr);
+	    head = NULL;
+		head2 = NULL;
+	   // head = (struct sta *)malloc(sizeof(struct sta));
+		makePostfix();
+		ret = evalPostfix();
+		//printf("%s\n", post);
+		printf("#%d %d\n", i, ret);
+		//printf("\n");
+	}
+	Sleep(100000);
+	return(0);
+}
+		
+		
+void push(char i) {
+	struct sta *n = NULL;
+	n = (struct sta *)malloc(sizeof(struct sta));
+	n->op = i;
+	n->next =  head;
+	head = n;
+}
+
+void push2(int i) {
+	struct sta2 *n = NULL;
+	n = (struct sta2 *)malloc(sizeof(struct sta2));
+	n->num = i;
+	n->next =  head2;
+	head2 = n;
+}
+
+char pop() {
+	char k = '\0';
+	if (head != NULL) {
+	    k = head->op;
+	    head = head->next;
+	}
+	return k;
+}
+
+int pop2() {
+	int k = 0;
+	if (head2 != NULL) {
+	    k = head2->num;
+	    head2 = head2->next;
+	}
+	return k;
+}
+
+int isEmpty() {
+	if(head == NULL) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+void makePostfix() {
+	char b,c;
+	int cnt;
+	int j,p;
+	j =0;
+	p= 0;
+	for(cnt = 0; cnt < len; cnt++) {
+	    b = arr[cnt];
+		if (b >= '0' && b <= '9') {
+            post[j] = b;
+			j++;
+		} else if (b == '*') {
+			push(b);
+
+		} else if (b == '+') {
+			while(head != NULL) {
+			    if(head->op == '*' || head->op == '+' ) {
+			    	 post[j] = pop();
+			    	 j++;
+				} else {
+					break;
+				}		
+			}
+			push(b);
+		} else if (b == '(') {
+			push(b);
+
+		} else if (b == ')') {
+			c = pop();
+			while(c != '(') {
+
+				    post[j++] = c;
+					 c = pop();
+			   }
+		}
+	}
+	while(head != NULL)
+	post[j++] = pop();
+	post[j] = '\0';
+}
+
+int evalPostfix() {
+	head2 = NULL;
+	int len2,p;
+	char b;
+	int q,r,s;
+	len2 = 0;
+	len2 = strlen(post);
+	//printf("len2 is %d \n", len2);
+	for (p = 0; p < len2; p++) {
+	     b = post[p];
+		if (b >= '0' && b <= '9') {
+            push2(b - '0');
+		} else if (b == '*' || b == '+') { 
+			q = pop2();
+			r = pop2();
+			s = doOp(q,r,b);
+			push2(s);
+		}
+	}
+	s = pop2();
+	return s;
+}
+
+int doOp(int q, int r, char s) {
+
+	if (s == '*')
+		return(q*r);
+	else
+		return(q+r);
+
+}
