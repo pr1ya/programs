@@ -1,0 +1,102 @@
+#include <stdio.h>
+//#include <windows.h>
+
+
+int N;
+char Alpha[101];
+int Firstchild[101];
+int Secondchild[101];
+char Answer[101];
+struct node* head;
+struct node* maketree (int i);
+void inorder(struct node* n);
+
+struct node
+{
+  char value;
+  struct node *left;
+  struct node *right;
+};
+
+int main(void)
+{
+	int test_case;
+	
+	for(test_case = 1; test_case <= 10; ++test_case)
+	{
+		int i, j;
+		int addr;
+		char str[1000];
+		memset(Firstchild, 0, sizeof(int) * 101);
+		memset(Secondchild, 0, sizeof(int) * 101);
+		memset(Alpha, 0, sizeof(char) * 101);
+		memset(Answer, 0, sizeof(char) * 101);
+		head = NULL;
+
+		scanf("%d", &N);
+		for(i = 0; i < N; i++)
+		{
+			scanf("%d", &addr);
+			scanf("%s", str);
+
+			Alpha[addr] = str[0];
+			if(addr*2 <= N)
+			{
+				scanf("%d ",&Firstchild[addr]);
+				if(addr*2 + 1 <= N)
+					scanf("%d ",&Secondchild[addr]);
+			}
+		}
+
+		maketree(1);
+		
+		printf("#%d ", test_case);
+		inorder(head);
+		printf("\n");
+	}
+	//Sleep(100000);
+	return 0;
+}
+
+struct node* maketree (int i) {
+	//while(1) {
+	if(i == 0) return NULL;
+	struct node *n;
+	n = (struct node *)malloc(sizeof(struct node));
+	n->left = NULL;
+	n->right = NULL;
+	n->value = Alpha[i];
+	//printf("## %c ##\n", Alpha[i]);
+	n->left = maketree(Firstchild[i]);
+	n->right = maketree(Secondchild[i]);
+	if(i == 1) {
+		head = n;
+	}
+	return n;
+}
+
+
+void inorder(struct node *n) {
+
+  if (n == NULL) return;
+  inorder(n->left);
+  printf("%c",n->value);
+  inorder(n->right);
+}
+
+void preorder(struct node *n) {
+
+  if (n == NULL) return;
+  printf("%c",n->value);
+  preorder(n->left);
+  
+  preorder(n->right);
+}
+
+void postorder(struct node *n) {
+
+  if (n == NULL) return;
+  postorder(n->left);
+  postorder(n->right);
+  printf("%c",n->value);
+}
