@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<windows.h>
+int a[16][16];
+int findMaze(int x,int y) ;
+int isValid(int x,int y);
+int main() {
+	int i ,j,k,l,m,ret;
+	char c;
+	for (i = 1; i < 11; i++) {
+		scanf("%d\n", &j);
+		for (l = 0; l < 16; l++) {
+			for (m = 0; m < 16; m++) {
+		    	scanf("%c", &c);
+			    a[l][m] = c-'0';
+			}
+			scanf("\n");
+		}
+	//	printf("\n");
+		ret = findMaze(1,1);
+	/*	for (l = 0; l < 16; l++) {
+			for (m = 0; m < 16; m++) {
+		    	printf("%d", a[l][m]);
+			}
+			printf("\n");
+		}*/
+		printf("#%d %d\n",i,ret);
+	}
+	Sleep(100000);
+	return 0;
+}
+
+int findMaze(int x,int y) {
+	int done = 0;
+    if (isValid(x,y)) {
+		if (a[x][y] == 3) {
+			done = 1;
+		} else {
+		a[x][y] = 5;
+		done = findMaze(x,y+1);
+		if(!done)
+			done = findMaze(x+1,y);
+		if(!done)
+			done = findMaze(x-1,y);
+		if(!done)
+			done = findMaze(x,y-1);
+		}
+		if(done) {
+			a[x][y] = 4;
+		}
+    }
+	return done;
+}
+
+int isValid(int x,int y) {
+	int ret = 0;
+    if(x >=0 && x<16 && y>=0 && y < 16) {
+    	if (a[x][y] == 0 || a[x][y] == 2 || a[x][y] == 3)
+	    	ret = 1;
+	}
+	return ret;
+}
