@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<windows.h>
+
+struct adjacent {
+	int end;
+	struct adjacent *next;
+};
+void push(int i);
+int pop();
+struct adjacent *adj[100];
+int disc[100] = {0};
+int proc[100] = {0};
+struct adjacent *head;
+int edge;
+void addEdge(int start, int end);
+int dfs(int vertex);
+int main () {
+
+	int i;
+	for (i =1; i < 10; i++) {
+	int j,k,l,res = 0;
+	   head = NULL;
+	    head = (struct adjacent *)malloc(sizeof(struct adjacent));
+	 
+
+	    for (j =0;j<100;j++) {
+		    disc[j] = 0;
+		    proc[j] = 0;
+	        adj[j] = NULL;
+			adj[j] = (struct adjacent *)malloc(sizeof(struct adjacent)*2);
+		      adj[j] = NULL;
+	    }
+		head = NULL;
+	    scanf("%d %d", &j, &edge);
+		for (j = 0; j < edge; j++) {
+			scanf("%d %d",&k,&l);
+			addEdge(k,l);
+			
+			//printf("#%d %d\n",k,l);
+		}
+		//printadj();
+		res = dfs(0);
+		printf("#%d %d\n",i,res);
+	}
+	Sleep(100000);
+	return 0;
+}
+	
+	void addEdge(int start, int end) {
+		struct adjacent *ad = NULL;
+		ad = (struct adjacent *)malloc(sizeof(struct adjacent));
+		ad->end = end;
+		ad->next =  adj[start];
+		adj[start] = ad;
+	//	printf("place 0 %d\n",adj[start]->end);
+	//	if (adj[start]->next != NULL) printf("place 00 %d\n",adj[start]->next->end);
+	}
+
+int dfs(int vertex) {
+	
+	push(vertex);
+	disc[vertex] = 1;
+	while (head != NULL) {
+	//	printf("place 1\n");
+		int v = pop();
+		//printf("place 2  v is %d\n",v);
+		proc[v] = 1;
+		if (v == 99) return 1;
+		struct adjacent *ad = NULL;
+		ad = (struct adjacent *)malloc(sizeof(struct adjacent));
+		ad = adj[v];
+		while(ad != NULL) {
+			//printf("val at v %d\n",ad->end);
+		    if (disc[ad->end] == 0) {
+			    push(ad->end);
+	//			printf("place 3  end  pushed is %d\n",ad->end);
+			    disc[ad->end] = 1;
+		    }
+			ad = ad->next;
+			//printf("place 4  end  pushed is %d\n",ad.end);
+		}
+	}
+	return 0;
+
+	}
+
+void push(int i) {
+	struct adjacent *n = NULL;
+	n = (struct adjacent *)malloc(sizeof(struct adjacent));
+	n->end = i;
+	n->next =  head;
+	head = n;
+}
+
+int pop() {
+	int k = 0;
+	k = head->end;
+	head = head->next;
+	return k;
+}
+
+	
+
+
