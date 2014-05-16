@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<windows.h>
+
+int a[10000];
+int len;
+void doInsertionSort();
+int main() {
+
+	int i ,j,m, k = 0;
+	char num[3];
+	scanf("%d\n", &k);
+	for (i =1; i <= k; i++) {
+		len = 0;
+		for (j = 0; j < 10000; j++) {
+			a[j] = 0;
+		}
+		scanf("#%d %d\n", &m, &len);
+		//printf("%d %d %d\n",k,m,len);
+	for (j = 0;j < len; j++) {
+		scanf("%s ", num);
+		//printf("%s ",num);
+		if (!strcmp(num, "ZRO"))
+			a[j] = 0;
+		else if (!strcmp(num, "ONE"))
+			a[j] = 1;
+		else if (!strcmp(num, "TWO"))
+			a[j] = 2;
+		else if (!strcmp(num, "THR"))
+			a[j] = 3;
+		else if (!strcmp(num, "FOR"))
+			a[j] = 4;
+		else if (!strcmp(num, "FIV"))
+			a[j] = 5;
+		else if (!strcmp(num, "SIX"))
+			a[j] = 6;
+		else if (!strcmp(num, "SVN"))
+			a[j] = 7;
+		else if (!strcmp(num, "EGT"))
+			a[j] = 8;
+		else if (!strcmp(num, "NIN"))
+			a[j] = 9;
+	}
+	scanf("\n");
+	doInsertionSort();
+	printf("#%d\n",i);
+	for(j = 0;j<len;j++) {
+		if(a[j] == 0)
+			printf("ZRO");
+		else if(a[j] == 1)
+			printf("ONE");
+		else if(a[j] == 2)
+			printf("TWO");
+		else if(a[j] == 3)
+			printf("THR");
+		else if(a[j] == 4)
+			printf("FOR");
+		else if(a[j] == 5)
+			printf("FIV");
+		else if(a[j] == 6)
+			printf("SIX");
+		else if(a[j] == 7)
+			printf("SVN");
+		else if(a[j] == 8)
+			printf("EGT");
+		else if(a[j] == 9)
+			printf("NIN");
+		if (j != len-1)
+		    printf(" ");
+	}
+	printf("\n");
+	}
+	Sleep(100000);
+	return 0;
+}
+
+
+void doInsertionSort()
+{
+     
+ int i , j ,temp;
+ 
+ for(i = 1 ; i  < len ; i++)
+ {
+   j = i;
+   
+   while((j-1) >= 0 && ( a[j-1] > a[j]))
+   {
+        temp = a[j];
+        a[j] = a[j-1];
+        a[j-1] = temp;
+        j--;       
+   }            
+} 
+}
