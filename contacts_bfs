@@ -1,0 +1,155 @@
+#include<stdio.h>
+#include<windows.h>
+
+struct adjacent {
+	int end;
+	struct adjacent *next;
+};
+void push(int i);
+int pop();
+struct adjacent *adj[101];
+int disc[101] = {0};
+int proc[101] = {0};
+int level[101] = {0};
+int max[101] = {0};
+struct adjacent *head;
+int edge;
+int node;
+void addEdge(int start, int end);
+int bfs(int vertex);
+int main () {
+
+	int i;
+	for (i =1; i <=10; i++) {
+	int j,k,l,res = 0;
+	int temp,temp2,temp3;
+	node = 0;
+	   head = NULL;
+	    head = (struct adjacent *)malloc(sizeof(struct adjacent));
+	 
+		 temp=0;
+		 temp2 = 0;
+		 temp3 = 0;
+	    for (j =0;j<101;j++) {
+		    disc[j] = 0;
+		    proc[j] = 0;
+			level[j] = 0;
+			max[j] = 0;
+	        adj[j] = NULL;
+			adj[j] = (struct adjacent *)malloc(sizeof(struct adjacent));
+		      adj[j] = NULL;
+	    }
+		head = NULL;
+	    scanf("%d %d", &edge ,&node);
+		edge = edge/2;
+		for (j = 0; j < edge; j++) {
+			scanf("%d %d",&k,&l);
+			addEdge(k,l);
+			
+			//printf("#%d %d\n",k,l);
+		}
+		//printadj();
+		//printf("node is %d\n",node);
+		res = bfs(node);
+		
+		for (j = 0;j < 101;j++) {
+			if(level[j] > temp)
+				temp = level[j];
+		}
+	//	printf("%d \n",temp);
+		for (j = 0;j < 101;j++) {
+			if(level[j] == temp) {
+				max[temp2++] = j;
+				//printf("%d ",j);
+			}
+		}
+		//printf("\n ");
+		for (j = 0;j < temp2;j++) {
+			//printf("%d ",max[j]);
+			if(max[j] > temp3)
+				temp3 = max[j];
+		}
+		//printf("\n ");
+		printf("#%d %d\n",i,temp3);
+	}
+	Sleep(101000);
+	return 0;
+}
+	
+	void addEdge(int start, int end) {
+		struct adjacent *ad = NULL;
+		ad = (struct adjacent *)malloc(sizeof(struct adjacent));
+		ad->end = end;
+		ad->next =  adj[start];
+		adj[start] = ad;
+	//	printf("place 0 %d\n",adj[start]->end);
+	//	if (adj[start]->next != NULL) printf("place 00 %d\n",adj[start]->next->end);
+	}
+
+int bfs(int vertex) {
+	
+	push(vertex);
+	disc[vertex] = 1;
+	while (head != NULL) {
+	//	printf("place 1\n");
+		int v = pop();
+		//printf("popped  v is %d\n",v);
+		proc[v] = 1;
+
+		struct adjacent *ad = NULL;
+		ad = (struct adjacent *)malloc(sizeof(struct adjacent));
+		ad = adj[v];
+		
+		while(ad != NULL) {
+			//printf("val at v %d\n",ad->end);
+			
+		    if (disc[ad->end] == 0) {
+			    push(ad->end);
+				level[ad->end] = level[v] +1;
+				//printf("place 3  end  pushed is %d\n",ad->end);
+			    disc[ad->end] = 1;
+		    }
+			ad = ad->next;
+			//printf("place 4  end  pushed is %d\n",ad->end);
+		}
+	}
+	return 0;
+
+	}
+
+void push(int i) {
+	struct adjacent *n = NULL;
+	n = (struct adjacent *)malloc(sizeof(struct adjacent));
+	n->end = i;
+	n->next =  head;
+	head = n;
+}
+
+int pop() {
+	int ret;
+	struct adjacent *n, *p;
+	if (head == NULL) 
+		return -1;
+	n = head;
+	p = head;
+	if(n->next == NULL) {
+	    ret = n->end;
+	    p = NULL;
+		n = NULL;
+		head = NULL;
+		return ret;
+	}
+
+	while(n->next != NULL) {
+		p = n;
+		n = n->next;
+	}
+	
+	//printf("popping %d\n",n->val);
+	ret = n->end;
+	p->next = NULL;
+	return ret;
+}
+	
+
+
