@@ -1,0 +1,182 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <windows.h>
+
+int N;
+char Operator[1001];
+int Firstchild[1001];
+int Secondchild[1001];
+int Number[1001];
+char final[1001];
+int Answer;
+struct node* head;
+struct st* head2;
+struct node* maketree (int i);
+void postorder(struct node* n);
+float calc(float a, float b, char c);
+float pop();
+void push (float i);
+float ans;
+struct node
+{
+  char value;
+  int num;
+  struct node *left;
+  struct node *right;
+};
+
+struct st
+{
+	float n;
+	struct st* next;
+};
+
+int main(void)
+{
+	int test_case;
+	/*
+	   freopen function below opens input.txt file in read only mode, and afterward,
+	   the program will read from input.txt file instead of standard(keyboard) input.
+	   To test your program, you may save input data in input.txt file,
+	   and use freopen function to read from the file when using scanf function.
+	   You may remove the comment symbols(//) in the below statement and use it.
+	   But before submission, you must remove the freopen function or rewrite comment symbols(//).
+	 */
+	 freopen("input.txt", "r", stdin);
+
+	/*
+	   If you remove the statement below, your program's output may not be rocorded
+	   when your program is terminated after the time limit.
+	   For safety, please use setbuf(stdout, NULL); statement.
+	 */
+	setbuf(stdout, NULL);
+
+	/*
+		Your program should handle 10 test cases given.
+	*/
+	for(test_case = 1; test_case <= 10; ++test_case)
+	{
+		int i, j;
+		int addr;
+		char str[1000];
+		i = 0;
+		memset(Firstchild, 0, sizeof(int) * 1001);
+		memset(Secondchild, 0, sizeof(int) * 1001);
+		memset(Number, 0, sizeof(int) * 1001);
+		memset(Operator, 0, sizeof(char) * 1001);
+		memset(final, 0, sizeof(char) * 1001);
+		/*
+			Read each test case from standard input.
+			The number of node is N.
+			
+			All information for i-th node is stored in i-th index of each arrays as follows 
+			 If i-th node consists of an operator, that operator is stored in Operator[i] and the children nodes are stored in Firstchild[i] and Secondchild[i], respectively. 
+			 If i-th node consists of a number, a given positive number is stored in Number[i].
+		 */
+		scanf("%d", &N);
+		for(i = 0; i < N; i++)
+		{
+			ans = 0;
+			head = NULL;
+			head2 = NULL;
+			scanf("%d", &addr);
+			scanf("%s", str);
+			if( strcmp(str,"+") == 0 || strcmp(str,"-")== 0  || strcmp(str,"/") == 0 || strcmp(str,"*")== 0  )
+			{
+				Operator[addr]=str[0];	
+				scanf("%d %d",&Firstchild[addr],&Secondchild[addr]);
+			}
+			else
+			{
+				Number[addr]=atoi(str);
+			}
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////
+		/*
+		   Implement your algorithm here.
+		   The answer to the case will be stored in variable Answer.
+		 */
+	/////////////////////////////////////////////////////////////////////////////////////////////
+		Answer = 0;
+		maketree(1);
+		
+		// Print the answer to standard output(screen).
+		printf("#%d ", test_case);
+		postorder(head);
+		Answer = (int)ans;
+		printf("%d\n", Answer);
+	}
+	Sleep(100000);
+	return 0;//Your program should return 0 on normal termination.
+}
+
+
+struct node* maketree (int i) {
+	//while(1) {
+	if(i == 0) return NULL;
+	struct node *n;
+	n = (struct node *)malloc(sizeof(struct node));
+	n->left = NULL;
+	n->right = NULL;
+	n->value = ' ';
+	n->num = 0;
+	if (Firstchild[i] != 0 && Secondchild[i] != 0)
+	    n->value = Operator[i];
+	else 
+		n->num = Number[i];
+	//printf("## %c ##\n",n->value);
+	n->left = maketree(Firstchild[i]);
+	n->right = maketree(Secondchild[i]);
+	if(i == 1) {
+		head = n;
+	}
+	return n;
+}
+
+
+void postorder(struct node *n) {
+  float a,b;
+  a=0;b=0;
+  if (n == NULL) return;
+  postorder(n->left);
+  postorder(n->right);
+  if(n->value == ' ') {
+	  push((float)(n->num));
+  } else {
+	  a = pop();
+	  b = pop();
+	  ans = calc(b,a,n->value);
+	  push(ans);
+  }
+}
+
+float calc(float a, float b, char c) {
+//	printf("a b c are %d %d %c\n",a,b,c);
+	if(c == '+')
+		return (a + b);
+	else if(c== '-')
+		return (a - b);
+	else if(c== '*')
+		return (a * b);
+	else
+		return (a / b);
+}
+
+void push (float i) {
+	struct st *n;
+	n = (struct st *)malloc(sizeof(struct st));
+	n->n = i;
+	n->next = head2;
+	head2 = n;
+}
+
+float pop() {
+	float h;
+	//if (head2 != NULL)
+	h = head2->n;
+	head2 = head2->next;
+	return h;
+}
+
