@@ -113,6 +113,7 @@ void push(int a,int b) {
 	    if(b > x->weight && b<x->next->weight) {
 	    	node->next = x->next;
 		    x->next = node;
+		    done = 1;
 			break;
 	    } 
 		x = x->next;
